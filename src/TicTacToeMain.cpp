@@ -101,6 +101,8 @@ TicTacToeFrame::TicTacToeFrame(const wxString& title, const wxPoint& pos, const 
    SetMenuBar( menuBar );
    CreateStatusBar();
 
+   // Pop-up
+//test
    setUp();
 
 }

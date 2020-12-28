@@ -22,33 +22,18 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="/DWIN32" />
-			<Add option="/D__WIN32__" />
-			<Add option="/D__WXMSW__" />
-			<Add option="/DWXUSINGDLL" />
-			<Add option="/D_WINDOWS" />
-			<Add option="/EHs" />
-			<Add option="/EHc" />
-			<Add option="/D_CRT_SECURE_DEPRECATE" />
-			<Add option="/D_CRT_NONSTDC_NO_DEPRECATE" />
-			<Add option="/D_CRT_SECURE_NO_WARNINGS" />
-			<Add option="/Zc:wchar_t" />
-			<Add option="/Zc:auto" />
-			<Add option="/W3" />
-			<Add directory="C:/compiler/wxWidgets-3.1.4/include" />
+			<Add directory="C:/Program Files (x86)/wxWidgets/include" />
 		</Compiler>
 		<Linker>
 			<Add directory="C:/Program Files (x86)/wxWidgets/lib" />
 			<Add directory="C:/Program Files (x86)/wxWidgets/lib/gcc_x64_dll" />
 		</Linker>
-		<Unit filename="TicTacToeApp.cpp" />
-		<Unit filename="TicTacToeApp.h" />
-		<Unit filename="TicTacToeMain.cpp" />
-		<Unit filename="TicTacToeMain.h" />
-		<Unit filename="resource.rc">
-			<Option compilerVar="WINDRES" />
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
+		<Unit filename="src/Opponent.cpp" />
+		<Unit filename="src/Opponent.h" />
+		<Unit filename="src/TicTacToeApp.cpp" />
+		<Unit filename="src/TicTacToeApp.h" />
+		<Unit filename="src/TicTacToeMain.cpp" />
+		<Unit filename="src/TicTacToeMain.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

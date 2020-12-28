@@ -5245,3 +5245,150 @@
 
 1572226902 c:\program files (x86)\wxwidgets\include\wx\qt\mdi.h
 
+1609129699 source:c:\users\nala5\github\tictactoe\include\opponent.h
+
+1608422309 source:c:\users\nala5\github\tictactoe\include\tictactoeapp.h
+	<wx/app.h>
+
+1609129620 source:c:\users\nala5\github\tictactoe\include\tictactoemain.h
+	<wx/button.h>
+	<wx/dcclient.h>
+	<wx/statline.h>
+	<wx/textctrl.h>
+	<wx/wxprec.h>
+	<wx/wx.h>
+
+1572226902 c:\program files (x86)\wxwidgets\include\wx\statline.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/statline.h"
+	"wx/msw/statline.h"
+	"wx/gtk/statline.h"
+	"wx/gtk1/statline.h"
+	"wx/osx/statline.h"
+	"wx/qt/statline.h"
+	"wx/generic/statline.h"
+
+1572226902 c:\program files (x86)\wxwidgets\include\wx\univ\statline.h
+
+1572226902 c:\program files (x86)\wxwidgets\include\wx\msw\statline.h
+
+1572226902 c:\program files (x86)\wxwidgets\include\wx\gtk\statline.h
+	"wx/defs.h"
+
+1572226902 c:\program files (x86)\wxwidgets\include\wx\gtk1\statline.h
+	"wx/defs.h"
+
+1572226902 c:\program files (x86)\wxwidgets\include\wx\osx\statline.h
+
+1572226902 c:\program files (x86)\wxwidgets\include\wx\qt\statline.h
+
+1572226902 c:\program files (x86)\wxwidgets\include\wx\generic\statline.h
+
+1572226902 c:\program files (x86)\wxwidgets\include\wx\wxprec.h
+	"wx/defs.h"
+	"wx/chartype.h"
+	"wx/msw/wrapwin.h"
+	"wx/msw/private.h"
+	"wx/msw/wrapcctl.h"
+	"wx/msw/wrapcdlg.h"
+	"wx/msw/missing.h"
+	"wx/wx.h"
+
+1572226902 c:\program files (x86)\wxwidgets\include\wx\msw\private.h
+	"wx/msw/wrapwin.h"
+	"wx/log.h"
+	"wx/window.h"
+	"wx/gdicmn.h"
+	"wx/colour.h"
+
+1572226902 c:\program files (x86)\wxwidgets\include\wx\msw\wrapcctl.h
+	"wx/msw/wrapwin.h"
+	<commctrl.h>
+	"wx/msw/missing.h"
+
+1572226902 c:\program files (x86)\wxwidgets\include\wx\msw\missing.h
+
+1572226902 c:\program files (x86)\wxwidgets\include\wx\msw\wrapcdlg.h
+	"wx/defs.h"
+	"wx/msw/wrapwin.h"
+	"wx/msw/private.h"
+	"wx/msw/missing.h"
+	<commdlg.h>
+	"wx/msw/winundef.h"
+
+1609129699 source:c:\users\nala5\github\tictactoe\src\opponent.cpp
+	"Opponent.h"
+
+1609129699 c:\users\nala5\github\tictactoe\include\opponent.h
+
+1609113474 source:c:\users\nala5\github\tictactoe\src\tictactoeapp.cpp
+	"wx_pch.h"
+	<wx/wx.h>
+	"TicTacToeApp.h"
+	"TicTacToeMain.h"
+	<wx/statline.h>
+	<wx/colour.h>
+
+1608422309 c:\users\nala5\github\tictactoe\include\tictactoeapp.h
+	<wx/app.h>
+
+1609129620 c:\users\nala5\github\tictactoe\include\tictactoemain.h
+	<wx/button.h>
+	<wx/dcclient.h>
+	<wx/statline.h>
+	<wx/textctrl.h>
+	<wx/wxprec.h>
+	<wx/wx.h>
+
+1609131016 source:c:\users\nala5\github\tictactoe\src\tictactoemain.cpp
+	"wx_pch.h"
+	"TicTacToeMain.h"
+	<iostream>
+	<wx/colour.h>
+	<wx/font.h>
+
+1609113474 source:c:\users\nala5\github\tictactoe\tictactoeapp.cpp
+	"wx_pch.h"
+	<wx/wx.h>
+	"TicTacToeApp.h"
+	"TicTacToeMain.h"
+	<wx/statline.h>
+	<wx/colour.h>
+
+1608422309 c:\users\nala5\github\tictactoe\tictactoeapp.h
+	<wx/app.h>
+
+1609129620 c:\users\nala5\github\tictactoe\tictactoemain.h
+	<wx/button.h>
+	<wx/dcclient.h>
+	<wx/statline.h>
+	<wx/textctrl.h>
+	<wx/wxprec.h>
+	<wx/wx.h>
+
+1609129699 source:c:\users\nala5\github\tictactoe\opponent.cpp
+	"Opponent.h"
+
+1609129699 c:\users\nala5\github\tictactoe\opponent.h
+
+1609131016 source:c:\users\nala5\github\tictactoe\tictactoemain.cpp
+	"wx_pch.h"
+	"TicTacToeMain.h"
+	<iostream>
+	<wx/colour.h>
+	<wx/font.h>
+
+1609129699 c:\users\nala5\github\tictactoe\src\opponent.h
+
+1608422309 c:\users\nala5\github\tictactoe\src\tictactoeapp.h
+	<wx/app.h>
+
+1609129620 c:\users\nala5\github\tictactoe\src\tictactoemain.h
+	<wx/button.h>
+	<wx/dcclient.h>
+	<wx/statline.h>
+	<wx/textctrl.h>
+	<wx/wxprec.h>
+	<wx/wx.h>
+
