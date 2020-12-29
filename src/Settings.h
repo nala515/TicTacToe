@@ -9,16 +9,6 @@ class Settings
        static Settings* getInstance();
        ~Settings();
 
-        // basic structure for each square
-        struct box_t
-        {
-           wxPoint *start;
-           wxPoint *stop;
-           wxButton *button;
-
-           box_t() {};
-        };
-
         // options set by the user from the settings dialog
         int GetNumRows() { return mNumRows; }
         void SetNumRows(int val) { mNumRows = val; }

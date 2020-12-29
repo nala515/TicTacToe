@@ -10,8 +10,8 @@ Opponent::~Opponent()
     //dtor
 }
 
-void Opponent::takeTurn(Settings::box_t** boxInfo, int &row, int &col)
-{
+void Opponent::takeTurn(GameArea* gameArea, int &row, int &col)
+{/*
     for(int i = 0; i < Settings::getInstance()->GetNumRows(); i++)
     {
         for(int j = 0; j < Settings::getInstance()->GetNumCols(); j++)
@@ -23,5 +23,5 @@ void Opponent::takeTurn(Settings::box_t** boxInfo, int &row, int &col)
                 return;
             }
         }
-    }
+    }*/
 }

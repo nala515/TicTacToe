@@ -1,7 +1,7 @@
 #ifndef OPPONENT_H
 #define OPPONENT_H
 
-#include "Settings.h"
+#include "GameArea.h"
 
 class Opponent
 {
@@ -9,7 +9,7 @@ class Opponent
         Opponent();
         virtual ~Opponent();
 
-        void takeTurn(Settings::box_t** boxInfo, int &row, int &col);
+        void takeTurn(GameArea* gameArea, int &row, int &col);
 
     protected:
 

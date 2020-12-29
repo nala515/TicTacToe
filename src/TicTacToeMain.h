@@ -15,7 +15,6 @@
 
 #include <wx/button.h>
 #include <wx/dcclient.h>
-#include <wx/statline.h>
 #include <wx/textctrl.h>
 #include <wx/wxprec.h>
 
@@ -41,15 +40,7 @@ class TicTacToeFrame: public wxFrame
         void OnQuit(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
 
-        // graphics and mechanics
-        void clearBoard();
-        void setUp();
-        void tearDown();
-        bool checkForWin();
-
         Settings *mSettings;
-        Settings::box_t ***mBox;
-        wxStaticLine **mLine;
         int mTurn;
 
         // opponent
