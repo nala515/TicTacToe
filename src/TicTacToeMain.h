@@ -48,7 +48,7 @@ class TicTacToeFrame: public wxFrame
         bool checkForWin();
 
         Settings *mSettings;
-        Settings::box_t **mBox;
+        Settings::box_t ***mBox;
         wxStaticLine **mLine;
         int mTurn;
 

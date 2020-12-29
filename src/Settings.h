@@ -12,9 +12,11 @@ class Settings
         // basic structure for each square
         struct box_t
         {
-           wxPoint begin;
-           wxPoint end;
+           wxPoint *start;
+           wxPoint *stop;
            wxButton *button;
+
+           box_t() {};
         };
 
         // options set by the user from the settings dialog

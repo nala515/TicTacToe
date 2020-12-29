@@ -162,7 +162,9 @@ void TicTacToeFrame::OnButton(wxCommandEvent& event)
 void TicTacToeFrame::OnNewGame(wxCommandEvent& event)
 {
     // todo: destroy existing game board first
-
+    clearBoard();
+    tearDown();
+    setUp();
     //wxMessageDialog *dlg = new wxMessageDialog(this, "New Game Settings", "Caption", wxOK, wxDefaultPosition);
     //wxMessageDialog *dlg = new wxMessageDialog(this, wxID_ANY, "New Game Settings", wxDefaultPosition, wxDefaultSize,
     //                                           wxOK | wxSTAY_ON_TOP | wxDEFAULT_DIALOG_STYLE, "New Game Settings");
@@ -183,7 +185,7 @@ void TicTacToeFrame::clearBoard()
     {
       for(int j = 0; j < mSettings->GetNumCols(); j++)
       {
-         mBox[i][j].button->SetLabel("");
+         mBox[i][j]->button->SetLabel("");
          mTurn = 0;
       }
     }
@@ -192,58 +194,77 @@ void TicTacToeFrame::clearBoard()
 // Draw the game area with lines and boxes
 //
 void TicTacToeFrame::setUp()
-{/*
+{
     int boxWidth = mSettings->GetBoxWidth();
     int marginSize = mSettings->GetMarginSize();
     int numRows = mSettings->GetNumRows();
     int numCols = mSettings->GetNumCols();
-*/
-    int boxWidth = 100;
-    int marginSize = 100;
-    int numRows = 3;
-    int numCols = 3;
-   // calculate box locations and insert text boxes
-   for(int i = 0; i < numRows; i++)
-   {
-      for(int j = 0; j < numCols; j++)
-      {
-         // top left pos
-         mBox[i][j].begin = wxPoint(marginSize + (boxWidth * i),
-                                    marginSize + (boxWidth * j));
-         // bottom right pos
-         mBox[i][j].end = wxPoint(mBox[i][j].begin.x + boxWidth,
-                                  mBox[i][j].begin.y + boxWidth);
+    int numLines = mSettings->GetNumLines();
 
-         // button
-         mBox[i][j].button = new wxButton (this, idButton, "", mBox[i][j].begin,
-                             wxSize(boxWidth, boxWidth), wxBORDER_NONE,
- 	                         wxDefaultValidator, wxButtonNameStr);
-         wxFont font(48, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
-                     false, "", wxFONTENCODING_DEFAULT);
-         mBox[i][j].button->SetFont(font);
-      }
-   }
-   // draw vertical lines
-   for(int i = 1; i < numRows; i++)
-   {
-      mLine[i] = new wxStaticLine(this, wxID_ANY,
-                 mBox[i][0].begin, wxSize(1,boxWidth * numRows), wxLI_VERTICAL);
-      mLine[i]->SetBackgroundColour(*wxBLACK);
-   }
-   // draw horizontal lines
-   for(int i = 1; i < numCols; i++)
-   {
-      mLine[i] = new wxStaticLine(this, wxID_ANY,
-                     mBox[0][i].begin, wxSize(boxWidth * numCols,1), wxLI_HORIZONTAL);
-      mLine[i]->SetBackgroundColour(*wxBLACK);
-   }
+    // calculate box locations and insert text boxes
+    mBox = new Settings::box_t**[numRows];
+    for(int i = 0; i < numRows; i++)
+    {
+        mBox[i] = new Settings::box_t*[numCols];
+        for(int j = 0; j < numCols; j++)
+        {
+            mBox[i][j] = new Settings::box_t;
+            // top left pos
+            mBox[i][j]->start = new wxPoint(marginSize + (boxWidth * i),
+                                            marginSize + (boxWidth * j));
+            // bottom right pos
+            mBox[i][j]->stop = new wxPoint(mBox[i][j]->start->x + boxWidth,
+                                           mBox[i][j]->start->y + boxWidth);
+
+            // button
+            mBox[i][j]->button = new wxButton (this, idButton, "", *mBox[i][j]->start,
+                                               wxSize(boxWidth, boxWidth), wxBORDER_NONE,
+ 	                                           wxDefaultValidator, wxButtonNameStr);
+            wxFont font(48, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
+                        false, "", wxFONTENCODING_DEFAULT);
+            mBox[i][j]->button->SetFont(font);
+         }
+    }
+    // draw vertical lines
+    mLine = new wxStaticLine*[numLines];
+    for(int i = 0; i < numLines/2; i++)
+    {
+       mLine[i] = new wxStaticLine(this, wxID_ANY, *mBox[i][0]->stop, wxSize(1,boxWidth * numRows), wxLI_VERTICAL);
+       mLine[i]->SetBackgroundColour(*wxBLACK);
+    }
+    // draw horizontal lines
+    for(int i = numLines/2; i < numLines; i++)
+    {
+        mLine[i] = new wxStaticLine(this, wxID_ANY, *mBox[0][i-numLines/2]->stop, wxSize(boxWidth * numCols,1), wxLI_HORIZONTAL);
+        mLine[i]->SetBackgroundColour(*wxBLACK);
+    }
 }
 
 // Destroy the lines and boxes
 //
 void TicTacToeFrame::tearDown()
 {
-    // todo
+    int numRows = mSettings->GetNumRows();
+    int numCols = mSettings->GetNumCols();
+    int numLines = mSettings->GetNumLines();
+
+    for(int i = 0; i < numRows; i++)
+    {
+        for(int j = 0; j < numCols; j++)
+        {
+            delete mBox[i][j]->start;
+            delete mBox[i][j]->stop;
+            delete mBox[i][j]->button;
+            delete mBox[i][j];
+        }
+        delete mBox[i];
+    }
+    delete mBox;
+    for(int i = 0; i < numLines; i++)
+    {
+        delete mLine[i];
+    }
+    delete mLine;
 }
 
 
@@ -255,9 +276,9 @@ bool TicTacToeFrame::checkForWin()
    // check rows for wins
    for(int i = 0; i < mSettings->GetNumRows(); i++)
    {
-      if((mBox[i][0].button->GetLabel() != "" ) &&
-         (mBox[i][0].button->GetLabel() == mBox[i][1].button->GetLabel()) &&
-         (mBox[i][1].button->GetLabel() == mBox[i][2].button->GetLabel()))
+      if((mBox[i][0]->button->GetLabel() != "" ) &&
+         (mBox[i][0]->button->GetLabel() == mBox[i][1]->button->GetLabel()) &&
+         (mBox[i][1]->button->GetLabel() == mBox[i][2]->button->GetLabel()))
       {
          return true;
       }
@@ -265,24 +286,24 @@ bool TicTacToeFrame::checkForWin()
    // check cols for wins
    for(int j = 0; j < mSettings->GetNumCols(); j++)
    {
-      if((mBox[0][j].button->GetLabel() != "" ) &&
-         (mBox[0][j].button->GetLabel() == mBox[1][j].button->GetLabel()) &&
-         (mBox[1][j].button->GetLabel() == mBox[2][j].button->GetLabel()))
+      if((mBox[0][j]->button->GetLabel() != "" ) &&
+         (mBox[0][j]->button->GetLabel() == mBox[1][j]->button->GetLabel()) &&
+         (mBox[1][j]->button->GetLabel() == mBox[2][j]->button->GetLabel()))
       {
          return true;
       }
    }
    // check left-right diagonal for win
-   if((mBox[0][0].button->GetLabel() != "" ) &&
-      (mBox[0][0].button->GetLabel() == mBox[1][1].button->GetLabel()) &&
-      (mBox[1][1].button->GetLabel() == mBox[2][2].button->GetLabel()))
+   if((mBox[0][0]->button->GetLabel() != "" ) &&
+      (mBox[0][0]->button->GetLabel() == mBox[1][1]->button->GetLabel()) &&
+      (mBox[1][1]->button->GetLabel() == mBox[2][2]->button->GetLabel()))
    {
       return true;
    }
    // check right-left diagonal for win
-   if((mBox[2][0].button->GetLabel() != "" ) &&
-      (mBox[2][0].button->GetLabel() == mBox[1][1].button->GetLabel()) &&
-      (mBox[1][1].button->GetLabel() == mBox[0][2].button->GetLabel()))
+   if((mBox[2][0]->button->GetLabel() != "" ) &&
+      (mBox[2][0]->button->GetLabel() == mBox[1][1]->button->GetLabel()) &&
+      (mBox[1][1]->button->GetLabel() == mBox[0][2]->button->GetLabel()))
    {
       return true;
    }
