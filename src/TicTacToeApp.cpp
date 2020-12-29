@@ -29,10 +29,7 @@ IMPLEMENT_APP(TicTacToeApp);
 
 bool TicTacToeApp::OnInit()
 {
-    TicTacToeFrame *frame = new TicTacToeFrame(
-                            "Tic-Tac-Toe", wxPoint(50, 50),
-                            wxSize(FrameSpace::kWindowSize,
-                            FrameSpace::kWindowSize + 50) );
+    TicTacToeFrame *frame = new TicTacToeFrame("Tic-Tac-Toe", wxPoint(50, 50), wxSize(500, 550));
     frame->Show( true );
 
     return true;

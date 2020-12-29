@@ -14,6 +14,8 @@
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add directory="C:/Program Files (x86)/wxWidgets/lib/gcc_x64_dll/mswud" />
+					<Add directory="./" />
+					<Add directory="src" />
 				</Compiler>
 				<Linker>
 					<Add library="wxmsw31ud_core" />
@@ -28,11 +30,27 @@
 			<Add directory="C:/Program Files (x86)/wxWidgets/lib" />
 			<Add directory="C:/Program Files (x86)/wxWidgets/lib/gcc_x64_dll" />
 		</Linker>
-		<Unit filename="src/Opponent.cpp" />
+		<Unit filename="src/Opponent.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="src/Opponent.h" />
+		<Unit filename="src/Settings.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="src/Settings.h" />
+		<Unit filename="src/SettingsDialog.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="src/SettingsDialog.h" />
 		<Unit filename="src/TicTacToeApp.cpp" />
 		<Unit filename="src/TicTacToeApp.h" />
-		<Unit filename="src/TicTacToeMain.cpp" />
+		<Unit filename="src/TicTacToeMain.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="src/TicTacToeMain.h" />
 		<Extensions />
 	</Project>

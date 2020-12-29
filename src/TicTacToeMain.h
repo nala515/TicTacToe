@@ -10,37 +10,21 @@
 #ifndef TICTACTOEMAIN_H
 #define TICTACTOEMAIN_H
 
+#include "Settings.h"
+#include "Opponent.h"
+
 #include <wx/button.h>
 #include <wx/dcclient.h>
 #include <wx/statline.h>
 #include <wx/textctrl.h>
 #include <wx/wxprec.h>
-#include <wx/wx.h>
-
-struct box_t
-{
-   wxPoint begin;
-   wxPoint end;
-   wxButton *button;
-};
-
-namespace FrameSpace
-{
-   // constants
-   static const int kNumRows = 3;
-   static const int kNumCols = 3;
-   static const int kNumBoxes = kNumRows * kNumCols;
-   static const int kNumLines = kNumRows + kNumCols - 2;
-   static const int kMarginSize = 100;
-   static const int kBoxWidth = 100;
-   static const int kWindowSize = (kMarginSize * 2) + (kNumCols * kBoxWidth);
-};
 
 class TicTacToeFrame: public wxFrame
 {
     public:
         TicTacToeFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
         virtual ~TicTacToeFrame();
+
     private:
         enum
         {
@@ -49,19 +33,30 @@ class TicTacToeFrame: public wxFrame
             idNewGame,
             idButton
         };
+
+        // action handlers
         void OnClose(wxCloseEvent& event);
         void OnButton(wxCommandEvent& event);
         void OnNewGame(wxCommandEvent& event);
         void OnQuit(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
-        void setUp();
-        bool checkForWin();
-        DECLARE_EVENT_TABLE();
 
-        // graphics
-        box_t mBox [FrameSpace::kNumRows][FrameSpace::kNumCols];
-        wxStaticLine *mLine [FrameSpace::kNumLines];
+        // graphics and mechanics
+        void clearBoard();
+        void setUp();
+        void tearDown();
+        bool checkForWin();
+
+        Settings *mSettings;
+        Settings::box_t **mBox;
+        wxStaticLine **mLine;
         int mTurn;
+
+        // opponent
+        Opponent mOpponent;
+        bool mUseOpponent;
+
+        DECLARE_EVENT_TABLE();
 };
 
 

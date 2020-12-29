@@ -5317,12 +5317,12 @@
 	<commdlg.h>
 	"wx/msw/winundef.h"
 
-1609129699 source:c:\users\nala5\github\tictactoe\src\opponent.cpp
+1609205525 source:c:\users\nala5\github\tictactoe\src\opponent.cpp
 	"Opponent.h"
 
 1609129699 c:\users\nala5\github\tictactoe\include\opponent.h
 
-1609113474 source:c:\users\nala5\github\tictactoe\src\tictactoeapp.cpp
+1609211139 source:c:\users\nala5\github\tictactoe\src\tictactoeapp.cpp
 	"wx_pch.h"
 	<wx/wx.h>
 	"TicTacToeApp.h"
@@ -5341,11 +5341,12 @@
 	<wx/wxprec.h>
 	<wx/wx.h>
 
-1609131016 source:c:\users\nala5\github\tictactoe\src\tictactoemain.cpp
+1609211759 source:c:\users\nala5\github\tictactoe\src\tictactoemain.cpp
 	"wx_pch.h"
 	"TicTacToeMain.h"
 	<iostream>
 	<wx/colour.h>
+	<wx/dialog.h>
 	<wx/font.h>
 
 1609113474 source:c:\users\nala5\github\tictactoe\tictactoeapp.cpp
@@ -5379,16 +5380,33 @@
 	<wx/colour.h>
 	<wx/font.h>
 
-1609129699 c:\users\nala5\github\tictactoe\src\opponent.h
+1609203516 c:\users\nala5\github\tictactoe\src\opponent.h
+	"Settings.h"
 
 1608422309 c:\users\nala5\github\tictactoe\src\tictactoeapp.h
 	<wx/app.h>
 
-1609129620 c:\users\nala5\github\tictactoe\src\tictactoemain.h
+1609211699 c:\users\nala5\github\tictactoe\src\tictactoemain.h
+	"Settings.h"
+	"Opponent.h"
 	<wx/button.h>
 	<wx/dcclient.h>
 	<wx/statline.h>
 	<wx/textctrl.h>
 	<wx/wxprec.h>
+
+1609132713 c:\users\nala5\github\tictactoe\src\globals.h
 	<wx/wx.h>
+
+1609205549 c:\users\nala5\github\tictactoe\src\settings.h
+	<wx/wx.h>
+
+1609201718 source:c:\users\nala5\github\tictactoe\src\settingsdialog.cpp
+	"SettingsDialog.h"
+
+1609203325 c:\users\nala5\github\tictactoe\src\settingsdialog.h
+	<wx/dialog.h>
+
+1609205111 source:c:\users\nala5\github\tictactoe\src\settings.cpp
+	"Settings.h"
 

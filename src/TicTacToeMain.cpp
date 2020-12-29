@@ -19,10 +19,10 @@
 
 #include <iostream>
 #include <wx/colour.h>
+#include <wx/dialog.h>
 #include <wx/font.h>
 
 using namespace std;
-using namespace FrameSpace;
 
 //helper functions
 enum wxbuildinfoformat {
@@ -64,53 +64,37 @@ END_EVENT_TABLE()
 // Constructor
 TicTacToeFrame::TicTacToeFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame(NULL, wxID_ANY, title, pos, size),
-      mTurn(0)
+      mTurn(0),
+      mOpponent(),
+      mUseOpponent(false)
 {
-/*
-#if wxUSE_MENUS
-    // create a menu bar
-    wxMenuBar* mbar = new wxMenuBar();
-    wxMenu* fileMenu = new wxMenu(_T(""));
-    fileMenu->Append(idMenuQuit, _("&Quit\tAlt-F4"), _("Quit the application"));
-    mbar->Append(fileMenu, _("&File"));
-
-    wxMenu* helpMenu = new wxMenu(_T(""));
-    helpMenu->Append(idMenuAbout, _("&About\tF1"), _("Show info about this application"));
-    mbar->Append(helpMenu, _("&Help"));
-
-    SetMenuBar(mbar);
-#endif // wxUSE_MENUS
-
-#if wxUSE_STATUSBAR
-    // create a status bar with some information about the used wxWidgets version
-    CreateStatusBar(2);
-    SetStatusText(_("Hello Code::Blocks user!"),0);
-    SetStatusText(wxbuildinfo(short_f), 1);
-#endif // wxUSE_STATUSBAR
-*/
-   wxMenu *menuFile = new wxMenu;
-   menuFile->Append(idNewGame, "&New Game\tCtrl-H",
+    // file menu
+    wxMenu *menuFile = new wxMenu;
+    wxMenu *menuHelp = new wxMenu;
+    wxMenuBar *menuBar = new wxMenuBar;
+    menuFile->Append(idNewGame, "&New Gameeee",
                     "Start a new game");
-   menuFile->AppendSeparator();
-   menuFile->Append(wxID_EXIT);
-   wxMenu *menuHelp = new wxMenu;
-   menuHelp->Append(wxID_ABOUT);
-   wxMenuBar *menuBar = new wxMenuBar;
-   menuBar->Append( menuFile, "&File" );
-   menuBar->Append( menuHelp, "&Help" );
-   SetMenuBar( menuBar );
-   CreateStatusBar();
+    menuFile->AppendSeparator();
+    menuFile->Append(wxID_EXIT);
 
-   // Pop-up
-//test
-   setUp();
+    // help menu
+    menuHelp->Append(wxID_ABOUT);
 
+    // menu bar
+    menuBar->Append( menuFile, "&File" );
+    menuBar->Append( menuHelp, "&Help" );
+    SetMenuBar( menuBar );
+    CreateStatusBar();
+
+    // game settings
+    mSettings = Settings::getInstance();
+    setUp();
 }
 
 
 TicTacToeFrame::~TicTacToeFrame()
 {
-   for(unsigned int i = 0; i < kNumLines; i++)
+   for(unsigned int i = 0; i < mSettings->GetNumLines(); i++)
    {
       delete mLine[i];
    }
@@ -163,12 +147,12 @@ void TicTacToeFrame::OnButton(wxCommandEvent& event)
    // Check if game is over
    if(checkForWin())
    {
-      // end the game
+      // end the game if someone wins
       wxLogMessage("You win!");
    }
-   else if(mTurn == kNumBoxes)
+   else if(mTurn == mSettings->GetNumBoxes())
    {
-      // end the game
+      // end the game if no more boxes available
       wxLogMessage("Draw");
    }
 }
@@ -177,10 +161,27 @@ void TicTacToeFrame::OnButton(wxCommandEvent& event)
 //
 void TicTacToeFrame::OnNewGame(wxCommandEvent& event)
 {
+    // todo: destroy existing game board first
+
+    //wxMessageDialog *dlg = new wxMessageDialog(this, "New Game Settings", "Caption", wxOK, wxDefaultPosition);
+    //wxMessageDialog *dlg = new wxMessageDialog(this, wxID_ANY, "New Game Settings", wxDefaultPosition, wxDefaultSize,
+    //                                           wxOK | wxSTAY_ON_TOP | wxDEFAULT_DIALOG_STYLE, "New Game Settings");
+    //if ( dlg->ShowModal() == wxID_OK )
+    //{
+    //    setUp();
+   // }
+    //else: dialog was cancelled or some another button pressed
+    //dlg->Destroy();
+}
+
+// Clear the board of X's and O's
+//
+void TicTacToeFrame::clearBoard()
+{
     // clear game board
-    for(int i = 0; i < kNumRows; i++)
+    for(int i = 0; i < mSettings->GetNumRows(); i++)
     {
-      for(int j = 0; j < kNumCols; j++)
+      for(int j = 0; j < mSettings->GetNumCols(); j++)
       {
          mBox[i][j].button->SetLabel("");
          mTurn = 0;
@@ -188,25 +189,34 @@ void TicTacToeFrame::OnNewGame(wxCommandEvent& event)
     }
 }
 
-// Set up the game area upon application startup.
+// Draw the game area with lines and boxes
 //
 void TicTacToeFrame::setUp()
-{
+{/*
+    int boxWidth = mSettings->GetBoxWidth();
+    int marginSize = mSettings->GetMarginSize();
+    int numRows = mSettings->GetNumRows();
+    int numCols = mSettings->GetNumCols();
+*/
+    int boxWidth = 100;
+    int marginSize = 100;
+    int numRows = 3;
+    int numCols = 3;
    // calculate box locations and insert text boxes
-   for(int i = 0; i < kNumRows; i++)
+   for(int i = 0; i < numRows; i++)
    {
-      for(int j = 0; j < kNumCols; j++)
+      for(int j = 0; j < numCols; j++)
       {
          // top left pos
-         mBox[i][j].begin = wxPoint(kMarginSize + (kBoxWidth * i),
-                                    kMarginSize + (kBoxWidth * j));
+         mBox[i][j].begin = wxPoint(marginSize + (boxWidth * i),
+                                    marginSize + (boxWidth * j));
          // bottom right pos
-         mBox[i][j].end = wxPoint(mBox[i][j].begin.x + kBoxWidth,
-                                  mBox[i][j].begin.y + kBoxWidth);
+         mBox[i][j].end = wxPoint(mBox[i][j].begin.x + boxWidth,
+                                  mBox[i][j].begin.y + boxWidth);
 
          // button
          mBox[i][j].button = new wxButton (this, idButton, "", mBox[i][j].begin,
-                             wxSize(kBoxWidth, kBoxWidth), wxBORDER_NONE,
+                             wxSize(boxWidth, boxWidth), wxBORDER_NONE,
  	                         wxDefaultValidator, wxButtonNameStr);
          wxFont font(48, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
                      false, "", wxFONTENCODING_DEFAULT);
@@ -214,19 +224,26 @@ void TicTacToeFrame::setUp()
       }
    }
    // draw vertical lines
-   for(int i = 1; i < kNumRows; i++)
+   for(int i = 1; i < numRows; i++)
    {
       mLine[i] = new wxStaticLine(this, wxID_ANY,
-                 mBox[i][0].begin, wxSize(1,300), wxLI_VERTICAL);
+                 mBox[i][0].begin, wxSize(1,boxWidth * numRows), wxLI_VERTICAL);
       mLine[i]->SetBackgroundColour(*wxBLACK);
    }
    // draw horizontal lines
-   for(int i = 1; i < kNumCols; i++)
+   for(int i = 1; i < numCols; i++)
    {
       mLine[i] = new wxStaticLine(this, wxID_ANY,
-                     mBox[0][i].begin, wxSize(300,1), wxLI_HORIZONTAL);
+                     mBox[0][i].begin, wxSize(boxWidth * numCols,1), wxLI_HORIZONTAL);
       mLine[i]->SetBackgroundColour(*wxBLACK);
    }
+}
+
+// Destroy the lines and boxes
+//
+void TicTacToeFrame::tearDown()
+{
+    // todo
 }
 
 
@@ -236,7 +253,7 @@ void TicTacToeFrame::setUp()
 bool TicTacToeFrame::checkForWin()
 {
    // check rows for wins
-   for(int i = 0; i < kNumRows; i++)
+   for(int i = 0; i < mSettings->GetNumRows(); i++)
    {
       if((mBox[i][0].button->GetLabel() != "" ) &&
          (mBox[i][0].button->GetLabel() == mBox[i][1].button->GetLabel()) &&
@@ -246,7 +263,7 @@ bool TicTacToeFrame::checkForWin()
       }
    }
    // check cols for wins
-   for(int j = 0; j < kNumCols; j++)
+   for(int j = 0; j < mSettings->GetNumCols(); j++)
    {
       if((mBox[0][j].button->GetLabel() != "" ) &&
          (mBox[0][j].button->GetLabel() == mBox[1][j].button->GetLabel()) &&
