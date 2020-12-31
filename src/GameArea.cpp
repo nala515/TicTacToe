@@ -1,18 +1,12 @@
 #include "GameArea.h"
 
-GameArea::GameArea()
+GameArea::GameArea(wxFrame *frame, int buttonId)
+    : mFrame(frame),
+      mButtonId(buttonId),
+      mGameActive(false)
 {
+    // initialize settings
     mSettings = Settings::getInstance();
-
-    int numRows = mSettings->GetNumRows();
-    // initialize rows
-    mBoxes = new box_t*[numRows];
-    for(int i = 0; i < mSettings->GetNumRows())
-    {
-        // initialize cols
-        mBoxes[i] = new box_t;
-    }
-    setUp();
 }
 
 GameArea::~GameArea()
@@ -25,45 +19,70 @@ GameArea::~GameArea()
 //
 void GameArea::setUp()
 {
+    // if a game has been started, tear it down first
+    if(mGameActive)
+    {
+        tearDown();
+    }
+
     int boxWidth = mSettings->GetBoxWidth();
     int marginSize = mSettings->GetMarginSize();
     int numRows = mSettings->GetNumRows();
     int numCols = mSettings->GetNumCols();
     int numLines = mSettings->GetNumLines();
 
-    // calculate box locations and insert text boxes
-    for(int i = 0; i < numRows; i++)
+    /* Draw boxes */
+
+    // initialize rows
+    for(int row = 0; row < numRows; row++)
     {
-        for(int j = 0; j < numCols; j++)
+        // initialize cols
+        std::vector<box_t*> colVec;
+        for(int col = 0; col < numCols; col++)
         {
+            box_t *box = new box_t;
+
+            // calculate box locations and insert text boxes
+
             // top left pos
-            mBox[i][j].start = wxPoint(marginSize + (boxWidth * i),
-                                       marginSize + (boxWidth * j));
+            box->start = wxPoint(marginSize + (boxWidth * row),
+                                 marginSize + (boxWidth * col));
             // bottom right pos
-            mBox[i][j].stop = wxPoint(mBox[i][j].start.x + boxWidth,
-                                      mBox[i][j].start.y + boxWidth);
+            box->stop = wxPoint(box->start.x + boxWidth,
+                                box->start.y + boxWidth);
 
             // button
-            mBox[i][j].button = wxButton (this, idButton, "", *mBox[i][j]->start,
-                                           wxSize(boxWidth, boxWidth), wxBORDER_NONE,
- 	                                       wxDefaultValidator, wxButtonNameStr);
+            box->button = new wxButton (mFrame, mButtonId, "", box->start,
+                                        wxSize(boxWidth, boxWidth), wxBORDER_NONE,
+ 	                                    wxDefaultValidator, wxButtonNameStr);
             wxFont font(48, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL,
                         false, "", wxFONTENCODING_DEFAULT);
-            mBox[i][j].button.SetFont(font);
-         }
+            box->button->SetFont(font);
+
+            colVec.push_back(box);
+        }
+        mBox.push_back(colVec);
     }
+
+    /* Draw lines */
+
     // draw vertical lines
     for(int i = 0; i < numLines/2; i++)
     {
-       mLine[i] = wxStaticLine(this, wxID_ANY, mBox[i][0].stop, wxSize(1,boxWidth * numRows), wxLI_VERTICAL);
-       mLine[i].SetBackgroundColour(*wxBLACK);
+       wxStaticLine *line = new wxStaticLine(mFrame, wxID_ANY, mBox[i][0]->stop, wxSize(1,boxWidth * numRows), wxLI_VERTICAL);
+       line->SetBackgroundColour(*wxBLACK);
+       mLine.push_back(line);
     }
     // draw horizontal lines
     for(int i = numLines/2; i < numLines; i++)
     {
-        mLine[i] = new wxStaticLine(this, wxID_ANY, mBox[0][i-numLines/2].stop, wxSize(boxWidth * numCols,1), wxLI_HORIZONTAL);
-        mLine[i].SetBackgroundColour(*wxBLACK);
+        wxStaticLine *line = new wxStaticLine(mFrame, wxID_ANY, mBox[0][i-numLines/2]->stop, wxSize(boxWidth * numCols,1), wxLI_HORIZONTAL);
+        line->SetBackgroundColour(*wxBLACK);
+        mLine.push_back(line);
     }
+
+    /* Game on! */
+    mGameActive = true;
 }
 
 
@@ -71,6 +90,9 @@ void GameArea::setUp()
 //
 void GameArea::tearDown()
 {
+    // only tear down if a game had been previously set up
+    if(!mGameActive) return;
+
     int numRows = mSettings->GetNumRows();
     int numCols = mSettings->GetNumCols();
     int numLines = mSettings->GetNumLines();
@@ -79,19 +101,19 @@ void GameArea::tearDown()
     {
         for(int j = 0; j < numCols; j++)
         {
-            delete mBox[i][j].start;
-            delete mBox[i][j].stop;
-            delete mBox[i][j].button;
+            delete mBox[i][j]->button;
             delete mBox[i][j];
         }
-        delete mBox[i];
     }
-    delete mBox;
-    for(int i = 0; i < numLines; i++)
+    mBox.clear();
+    for(int i = 0; i < mLine.size(); i++)
     {
         delete mLine[i];
     }
-    delete mLine;
+    mLine.clear();
+
+    // game off!
+    mGameActive = false;
 }
 
 
@@ -99,13 +121,15 @@ void GameArea::tearDown()
 //
 void GameArea::clearBoard()
 {
-    // clear game board
+    // if game hasn't been set up, nothing to clear
+    if(!mGameActive) return;
+
+    // else clear game board
     for(int i = 0; i < mSettings->GetNumRows(); i++)
     {
       for(int j = 0; j < mSettings->GetNumCols(); j++)
       {
-         mBox[i][j].button.SetLabel("");
-         mTurn = 0;
+         mBox[i][j]->button->SetLabel("");
       }
     }
 }
@@ -115,39 +139,50 @@ void GameArea::clearBoard()
 //
 bool GameArea::checkForWin()
 {
-   // check rows for wins
-   for(int i = 0; i < mSettings->GetNumRows(); i++)
-   {
-      if((mBox[i][0].button.GetLabel() != "" ) &&
-         (mBox[i][0].button.GetLabel() == mBox[i][1].button.GetLabel()) &&
-         (mBox[i][1].button.GetLabel() == mBox[i][2].button.GetLabel()))
-      {
-         return true;
-      }
-   }
-   // check cols for wins
-   for(int j = 0; j < mSettings->GetNumCols(); j++)
-   {
-      if((mBox[0][j].button.GetLabel() != "" ) &&
-         (mBox[0][j].button.GetLabel() == mBox[1][j].button.GetLabel()) &&
-         (mBox[1][j].button.GetLabel() == mBox[2][j].button.GetLabel()))
-      {
-         return true;
-      }
-   }
-   // check left-right diagonal for win
-   if((mBox[0][0].button.GetLabel() != "" ) &&
-      (mBox[0][0].button.GetLabel() == mBox[1][1].button.GetLabel()) &&
-      (mBox[1][1].button.GetLabel() == mBox[2][2].button.GetLabel()))
-   {
-      return true;
-   }
-   // check right-left diagonal for win
-   if((mBox[2][0].button.GetLabel() != "" ) &&
-      (mBox[2][0].button.GetLabel() == mBox[1][1].button.GetLabel()) &&
-      (mBox[1][1].button.GetLabel() == mBox[0][2].button.GetLabel()))
-   {
-      return true;
-   }
-   return false;
+    // if game hasn't been set up, nothing to check
+    if(!mGameActive) return false;
+
+    // else check rows for wins
+    for(int i = 0; i < mSettings->GetNumRows(); i++)
+    {
+        if((mBox[i][0]->button->GetLabel() != "" ) &&
+           (mBox[i][0]->button->GetLabel() == mBox[i][1]->button->GetLabel()) &&
+           (mBox[i][1]->button->GetLabel() == mBox[i][2]->button->GetLabel()))
+        {
+            // game over!!
+            mGameActive = false;
+            return true;
+        }
+    }
+    // check cols for wins
+    for(int j = 0; j < mSettings->GetNumCols(); j++)
+    {
+        if((mBox[0][j]->button->GetLabel() != "" ) &&
+           (mBox[0][j]->button->GetLabel() == mBox[1][j]->button->GetLabel()) &&
+           (mBox[1][j]->button->GetLabel() == mBox[2][j]->button->GetLabel()))
+        {
+            // game over!!
+            mGameActive = false;
+            return true;
+        }
+    }
+    // check left-right diagonal for win
+    if((mBox[0][0]->button->GetLabel() != "" ) &&
+       (mBox[0][0]->button->GetLabel() == mBox[1][1]->button->GetLabel()) &&
+       (mBox[1][1]->button->GetLabel() == mBox[2][2]->button->GetLabel()))
+    {
+        // game over!!
+        mGameActive = false;
+        return true;
+    }
+    // check right-left diagonal for win
+    if((mBox[2][0]->button->GetLabel() != "" ) &&
+       (mBox[2][0]->button->GetLabel() == mBox[1][1]->button->GetLabel()) &&
+       (mBox[1][1]->button->GetLabel() == mBox[0][2]->button->GetLabel()))
+    {
+        // game over!!
+        mGameActive = false;
+        return true;
+    }
+    return false;
 }

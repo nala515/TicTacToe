@@ -10,8 +10,9 @@
 #ifndef TICTACTOEMAIN_H
 #define TICTACTOEMAIN_H
 
-#include "Settings.h"
+#include "GameArea.h"
 #include "Opponent.h"
+#include "Settings.h"
 
 #include <wx/button.h>
 #include <wx/dcclient.h>
@@ -40,8 +41,12 @@ class TicTacToeFrame: public wxFrame
         void OnQuit(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
 
+        // mechanics
         Settings *mSettings;
         int mTurn;
+
+        // graphics
+        GameArea *mGameArea;
 
         // opponent
         Opponent mOpponent;

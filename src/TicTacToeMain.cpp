@@ -65,6 +65,7 @@ END_EVENT_TABLE()
 TicTacToeFrame::TicTacToeFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame(NULL, wxID_ANY, title, pos, size),
       mTurn(0),
+      mGameArea(NULL),
       mOpponent(),
       mUseOpponent(false)
 {
@@ -72,7 +73,7 @@ TicTacToeFrame::TicTacToeFrame(const wxString& title, const wxPoint& pos, const 
     wxMenu *menuFile = new wxMenu;
     wxMenu *menuHelp = new wxMenu;
     wxMenuBar *menuBar = new wxMenuBar;
-    menuFile->Append(idNewGame, "&New Gameeee",
+    menuFile->Append(idNewGame, "&New Game",
                     "Start a new game");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
@@ -88,12 +89,15 @@ TicTacToeFrame::TicTacToeFrame(const wxString& title, const wxPoint& pos, const 
 
     // game settings
     mSettings = Settings::getInstance();
-    //setUp();
+
+    // graphics
+    mGameArea = new GameArea(this, idButton);
 }
 
 
 TicTacToeFrame::~TicTacToeFrame()
 {
+    delete mGameArea;
 }
 
 // Handle when the user exits.
@@ -141,7 +145,7 @@ void TicTacToeFrame::OnButton(wxCommandEvent& event)
    mTurn++;
 
    // Check if game is over
-   if(true)//checkForWin())
+   if(mGameArea->checkForWin())
    {
       // end the game if someone wins
       wxLogMessage("You win!");
@@ -157,10 +161,9 @@ void TicTacToeFrame::OnButton(wxCommandEvent& event)
 //
 void TicTacToeFrame::OnNewGame(wxCommandEvent& event)
 {
-    // todo: destroy existing game board first
-    //clearBoard();
-    //tearDown();
-    //setUp();
+    mGameArea->tearDown();
+    mGameArea->setUp();
+    mTurn = 0;
     //wxMessageDialog *dlg = new wxMessageDialog(this, "New Game Settings", "Caption", wxOK, wxDefaultPosition);
     //wxMessageDialog *dlg = new wxMessageDialog(this, wxID_ANY, "New Game Settings", wxDefaultPosition, wxDefaultSize,
     //                                           wxOK | wxSTAY_ON_TOP | wxDEFAULT_DIALOG_STYLE, "New Game Settings");

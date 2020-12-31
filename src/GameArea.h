@@ -4,11 +4,12 @@
 #include "Settings.h"
 
 #include <wx/statline.h>
+#include "stdlib.h"
 
 class GameArea
 {
     public:
-        GameArea();
+        GameArea(wxFrame *frame, int buttonId);
         virtual ~GameArea();
 
         void setUp();
@@ -24,12 +25,17 @@ class GameArea
         {
            wxPoint start;
            wxPoint stop;
-           wxButton button;
+           wxButton *button;
         };
 
-        Settings* mSettings;
-        wxStaticLine *mLine;
-        box_t *mBoxes[];
+        wxFrame *mFrame;
+        Settings *mSettings;
+        int mButtonId;
+        bool mGameActive;
+
+        // graphics
+        std::vector<wxStaticLine*> mLine;
+        std::vector<std::vector<box_t*>> mBox;
 };
 
 #endif // GAMEAREA_H
